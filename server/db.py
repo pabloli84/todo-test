@@ -3,25 +3,20 @@ import logging
 
 logger = logging.getLogger()
 
+db_file = 'db.sqlite'
+
 
 class ManageTodoDB:
 
-    db = sqlite3.Connection
-
-    def __init__(self, db_file):
-        self.db_file = db_file
-        self.connect()
-
-    def connect(self):
+    def connect_db(self):
         try:
-            self.db = sqlite3.connect(self.db_file)
-            logger.info("Connected to DB: %s", self.db_file)
+            db = sqlite3.connect(db_file)
+            logger.info("Connected to DB: %s", db_file)
+            return db
         except sqlite3.Error as e:
             logger.error('Error connecting to DB: %s', e)
 
-    def close_db(self):
-        self.db.close()
-
+    # Create tables
     def create_db_struct(self):
         sql = '''
             CREATE TABLE IF NOT EXISTS tasks (
@@ -38,7 +33,7 @@ class ManageTodoDB:
                 user_name VARCHAR(50) NOT NULL
             );
               '''
-        c = self.db.cursor()
+        c = self.connect_db().cursor()
         try:
             c.executescript(sql)
             logger.info("DB structure was created!")
@@ -46,11 +41,12 @@ class ManageTodoDB:
             logger.error("Error creating DB: %s", e)
             return e
 
+    # Add new user
     def add_user(self, username):
         sql = '''
             INSERT INTO users (user_name) VALUES("{:s}")    
         '''.format(username)
-        c = self.db.cursor()
+        c = self.connect_db().cursor()
         try:
             c.executescript(sql)
             logger.info("Successfully added user %s", username)
@@ -58,13 +54,17 @@ class ManageTodoDB:
             logger.error("Error adding user %s. Message: %s", username, e)
             return e
 
+    # Add new task
     def add_task(self, name, description, assignee, start_date, end_date):
+
+        user_id = self.get_user_id(assignee)
+
         sql = '''
             INSERT INTO tasks (task_name, task_description, task_assignee, task_start_date, task_end_date)
             VALUES("{:s}", "{:s}", {:d}, "{:s}", "{:s}")
-        '''.format(name, description, assignee, start_date, end_date)
+        '''.format(name, description, user_id, start_date, end_date)
 
-        c = self.db.cursor()
+        c = self.connect_db().cursor()
         try:
             c.executescript(sql)
             logger.info("Successfully added task: %s", name)
@@ -72,10 +72,24 @@ class ManageTodoDB:
             logger.error("DB integrity error: %s", e)
             return e
 
-    def remove_db(self):
+    # Helper  method to user id by name
+    def get_user_id(self, user_name):
+
         sql = '''
-            DROP DATABASE;
+            SELECT user_id FROM users WHERE user_name="{:s}"
+        '''.format(user_name)
+
+        c = self.connect_db().cursor()
+        user_id = c.execute(sql).fetchone()[0]
+
+        return user_id
+
+    # Remove all tables
+    def remove_tables(self):
+        sql = '''
+            DROP TABLE IF EXISTS tasks;
+            DROP TABLE IF EXISTS users;
         '''
-        c = self.db.cursor()
+        c = self.connect_db().cursor()
 
         return c.executescript(sql)
