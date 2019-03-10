@@ -57,7 +57,7 @@ class ManageTodoDB:
     # Add new task
     def add_task(self, name, description, assignee, start_date, end_date):
 
-        user_id = self.get_user_id(assignee)
+        user_id = self.__get_user_id(assignee)
         if not user_id:
             return 404
 
@@ -69,14 +69,15 @@ class ManageTodoDB:
         c = self.connect_db().cursor()
         try:
             c.executescript(sql)
-            return 201
             logger.info("Successfully added task: %s", name)
+            return 201
+
         except sqlite3.IntegrityError as e:
             logger.error("DB integrity error: %s", e)
             return e
 
     # Helper  method to user id by name
-    def get_user_id(self, user_name):
+    def __get_user_id(self, user_name):
 
         sql = '''
             SELECT user_id FROM users WHERE user_name="{:s}"
@@ -107,11 +108,23 @@ class ManageTodoDB:
         '''
 
         conn = self.connect_db()
-        conn.row_factory = sqlite3.Row
 
-        c = self.connect_db().cursor()
+        c = conn.cursor()
         c.execute(sql)
 
         tasks = c.fetchall()
-        print(tasks)
         return tasks
+
+    def get_all_users(self):
+        sql = '''
+            SELECT * FROM users;
+        '''
+
+        conn = self.connect_db()
+
+        c = conn.cursor()
+        c.execute(sql)
+
+        users = c.fetchall()
+
+        return users

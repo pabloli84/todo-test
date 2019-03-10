@@ -40,3 +40,6 @@ class Users(Resource):
         user_name = args['user_name']
         dbase.add_user(user_name)
         return user_name, 201
+
+    def get(self):
+        return dbase.get_all_users()
