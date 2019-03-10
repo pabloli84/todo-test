@@ -91,14 +91,17 @@ class ManageTodoDB:
         return user_id[0]
 
     # Remove all tables
-    def remove_tables(self):
+    def recreate_db(self):
         sql = '''
             DROP TABLE IF EXISTS tasks;
             DROP TABLE IF EXISTS users;
         '''
         c = self.connect_db().cursor()
 
-        return c.executescript(sql)
+        c.executescript(sql)
+
+        logger.info("Deleted all tables")
+        self.create_db_struct()
 
     # Get all tasks in DB
     def get_all_tasks(self):

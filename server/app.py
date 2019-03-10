@@ -21,6 +21,7 @@ api = Api(app)
 
 api.add_resource(resources.Tasks, '/tasks')
 api.add_resource(resources.Users, '/users')
+api.add_resource(resources.TasksDB, '/db')
 
 
 if __name__ == '__main__':

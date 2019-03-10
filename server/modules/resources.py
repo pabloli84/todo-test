@@ -43,3 +43,9 @@ class Users(Resource):
 
     def get(self):
         return dbase.get_all_users()
+
+
+class TasksDB(Resource):
+    def delete(self):
+        dbase.recreate_db()
+        return '', 204
