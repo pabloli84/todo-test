@@ -98,3 +98,20 @@ class ManageTodoDB:
         c = self.connect_db().cursor()
 
         return c.executescript(sql)
+
+    # Get all tasks in DB
+    def get_all_tasks(self):
+        sql = '''
+            SELECT task_name, task_description, task_start_date, task_end_date, user_name FROM tasks, users
+            WHERE task_assignee = user_id;
+        '''
+
+        conn = self.connect_db()
+        conn.row_factory = sqlite3.Row
+
+        c = self.connect_db().cursor()
+        c.execute(sql)
+
+        tasks = c.fetchall()
+        print(tasks)
+        return tasks

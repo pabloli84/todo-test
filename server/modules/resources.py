@@ -29,6 +29,9 @@ class Tasks(Resource):
 
         return args, response
 
+    def get(self):
+        return dbase.get_all_tasks()
+
 
 class Users(Resource):
 
