@@ -1,5 +1,8 @@
 from flask_restful import Resource, reqparse, fields, marshal_with
 from modules import db
+import logging
+
+logger = logging.getLogger()
 
 dbase = db.ManageTodoDB()
 
@@ -42,6 +45,7 @@ class Users(Resource):
         return user_name, 201
 
     def get(self):
+        logger.info("Getting all users from DB")
         return dbase.get_all_users()
 
 
