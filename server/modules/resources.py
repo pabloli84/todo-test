@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse, fields, marshal_with
-import db
+from modules import db
 
 dbase = db.ManageTodoDB()
 

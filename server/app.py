@@ -2,7 +2,7 @@ from flask import Flask
 from flask_restful import Api
 import logging
 # from server import db
-import db, resources
+from modules import db, resources
 
 logger = logging.getLogger()
 handler = logging.StreamHandler()
