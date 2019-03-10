@@ -1,1 +1,1 @@
-web: "python3 server/app.py" todo_test:app --log-file=-
+web: python ./server/app.py todo_test:app --log-file=-
