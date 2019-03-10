@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_restful import Api
 import logging
-# from server import db
+import os
 from modules import db, resources
 
 logger = logging.getLogger()
@@ -23,6 +23,7 @@ api.add_resource(resources.Tasks, '/tasks')
 api.add_resource(resources.Users, '/users')
 api.add_resource(resources.TasksDB, '/db')
 
+port = os.getenv("PORT", 5000)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=port, debug=True)
