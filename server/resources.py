@@ -25,9 +25,9 @@ class Tasks(Resource):
     @marshal_with(task_fields)
     def put(self):
         args = parser.parse_args()
-        dbase.add_task(args.task_name, args.description, args.assignee, args.start_date, args.end_date)
+        response = dbase.add_task(args.task_name, args.description, args.assignee, args.start_date, args.end_date)
 
-        return args, 201
+        return args, response
 
 
 class Users(Resource):

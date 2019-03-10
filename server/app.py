@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_restful import Resource, Api
+from flask_restful import Api
 import logging
 # from server import db
 import db, resources
@@ -13,15 +13,11 @@ logger.addHandler(handler)
 
 logger.setLevel(logging.INFO)
 
+todo_db = db.ManageTodoDB()
+todo_db.create_db_struct()
+
 app = Flask(__name__)
 api = Api(app)
-
-# base = db.ManageTodoDB("db.sqlite")
-# base.create_db_struct()
-# base.add_user("Michael")
-# base.add_task("Test 1", "This my first task", 1, "2019-03-10", "2019-03-11")
-
-# manage_todos = db.ManageTodoDB()
 
 api.add_resource(resources.Tasks, '/tasks')
 api.add_resource(resources.Users, '/users')

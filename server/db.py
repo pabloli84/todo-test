@@ -30,7 +30,7 @@ class ManageTodoDB:
                  
             CREATE TABLE IF NOT EXISTS users (
                 user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_name VARCHAR(50) NOT NULL
+                user_name VARCHAR(50) NOT NULL UNIQUE
             );
               '''
         c = self.connect_db().cursor()
@@ -58,6 +58,8 @@ class ManageTodoDB:
     def add_task(self, name, description, assignee, start_date, end_date):
 
         user_id = self.get_user_id(assignee)
+        if not user_id:
+            return 404
 
         sql = '''
             INSERT INTO tasks (task_name, task_description, task_assignee, task_start_date, task_end_date)
@@ -67,6 +69,7 @@ class ManageTodoDB:
         c = self.connect_db().cursor()
         try:
             c.executescript(sql)
+            return 201
             logger.info("Successfully added task: %s", name)
         except sqlite3.IntegrityError as e:
             logger.error("DB integrity error: %s", e)
@@ -80,9 +83,11 @@ class ManageTodoDB:
         '''.format(user_name)
 
         c = self.connect_db().cursor()
-        user_id = c.execute(sql).fetchone()[0]
+        user_id = c.execute(sql).fetchone()
+        if user_id is None:
+            return False
 
-        return user_id
+        return user_id[0]
 
     # Remove all tables
     def remove_tables(self):
