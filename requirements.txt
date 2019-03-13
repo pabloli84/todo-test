@@ -1,2 +1,6 @@
 flask
 flask-restful
+flask-bootstrap
+flask-appconfig
+flask-nav
+flask-wtf
