@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, flash, redirect, url_for
 from flask_nav.elements import Navbar, View, Subgroup, Link, Text, Separator
 from markupsafe import escape
 
-from .forms import UserForm
+from .forms import UserForm, TasksForm
 from .nav import nav
 
 frontend = Blueprint('frontend', __name__)
@@ -38,5 +38,6 @@ def users():
 
 @frontend.route('/tasks/', methods=('GET', 'POST'))
 def tasks():
+    form = TasksForm()
 
-    return "Hello!"
+    return render_template('tasks.html', form=form)
