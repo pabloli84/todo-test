@@ -23,7 +23,8 @@ api.add_resource(resources.Tasks, '/tasks')
 api.add_resource(resources.Users, '/users')
 api.add_resource(resources.TasksDB, '/db')
 
-port = os.getenv("PORT", 5000)
+port = os.getenv("PORT", 5001)
+print(port)
 
 if __name__ == '__main__':
     app.run(port=port, host="0.0.0.0", debug=True)
