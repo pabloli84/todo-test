@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, flash, redirect, url_for
 from flask_nav.elements import Navbar, View, Subgroup, Link, Text, Separator
 from markupsafe import escape
+from .client import add_user
 
 from .forms import UserForm, TasksForm
 from .nav import nav
@@ -29,8 +30,10 @@ def users():
     if form.validate_on_submit():
         flash('Hello, {}. You have successfully signed up'
               .format(escape(form.name.data)))
+        #
+        # # In a real application, you may wish to avoid this tedious redirect.
 
-        # In a real application, you may wish to avoid this tedious redirect.
+        # return add_user(form.name)
         return redirect(url_for('.index'))
 
     return render_template('users.html', form=form)
