@@ -27,13 +27,21 @@ def index():
 def users():
     form = UserForm()
 
-    if form.validate_on_submit():
-        flash('Hello, {}. You have successfully signed up'
-              .format(escape(form.name.data)))
-        #
-        # # In a real application, you may wish to avoid this tedious redirect.
+    if form.is_submitted():
 
-        # return add_user(form.name)
+        # if form.validate_on_submit():
+            # flash('Hello, {}. You have successfully signed up'
+            #       .format(escape(form.name.data)))
+            #
+            # # In a real application, you may wish to avoid this tedious redirect.
+        print("User: ", form.name.data)
+        status_code, message = add_user(escape(form.name.data))
+
+        if status_code == 201:
+            flash('User {} successfully added!'
+                  .format(escape(form.name.data)))
+        else:
+            flash('Error adding user: {}'.format(message))
         return redirect(url_for('.index'))
 
     return render_template('users.html', form=form)

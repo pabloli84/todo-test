@@ -50,9 +50,10 @@ class ManageTodoDB:
         try:
             c.executescript(sql)
             logger.info("Successfully added user %s", username)
-        except sqlite3.Error as e:
+            return True
+        except sqlite3.IntegrityError as e:
             logger.error("Error adding user %s. Message: %s", username, e)
-            return e
+            return False
 
     # Add new task
     def add_task(self, name, description, assignee, start_date, end_date):

@@ -41,8 +41,10 @@ class Users(Resource):
     def put(self):
         args = parser.parse_args()
         user_name = args['user_name']
-        dbase.add_user(user_name)
-        return user_name, 201
+        if dbase.add_user(user_name):
+            return user_name, 201
+        else:
+            return "Data integrity error", 400
 
     def get(self):
         logger.info("Getting all users from DB")
