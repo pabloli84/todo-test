@@ -38,3 +38,4 @@ python3 app.py
         "end_date": "2019-03-11 "
     }
     ```
+    * GET - get all tasks
