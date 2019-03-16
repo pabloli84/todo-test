@@ -1,1 +1,1 @@
-web: python ./server/app.py todo_test:app --log-file=-
+web: cd ./server && gunicorn app:app --log-file=-

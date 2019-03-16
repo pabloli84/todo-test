@@ -6,3 +6,4 @@ flask-nav
 flask-wtf
 requests
 flask-cors
+gunicorn
