@@ -39,3 +39,6 @@ python3 app.py
     }
     ```
     * GET - get all tasks
+    
+* /db
+    * DELETE - will delete all tables and recreate from scratch
