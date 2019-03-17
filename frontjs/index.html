@@ -1,21 +1,54 @@
 <html ng-app="testApp">
   <head>
     <title>Test application</title>
+    <link rel="stylesheet" href="css/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+
   </head>
   <body ng-controller="testController">
     <h2>This is test application</h2>
+<div class="menu">
+    <button ng-click="users.html">USERS</button>
+    <button ng-click="">TASKS</button>
+</div>
 
+<div>
+    <h2>USERS</h2>
+  <hr>
+    <h3>Create user</h3>
     <p>Input username:</p>
     <p><input type="text" ng-model="user_name"></p>
-
-    <button ng-click="getUser()">Get users</button>
     <button ng-click="addUser(user_name)">Add user</button>
-    
-    <div id="users">
 
+    <h3>Get all users</h3>
+  <hr>
+  <p>No users requested yet</p>
+    <button ng-click="getUser()">Get users</button>
+</div>
+
+    <div>
+      <h2>TASKS</h2>
+      <hr>
+      <h3>Create task</h3>
+      <p>Task name:</p>
+      <p><input type="text" ng-model="user_name"></p>
+      <p>Description:</p>
+      <p><input type="text" ng-model=""></p>
+      <p>Assignee:</p>
+      <p><input type="text" ng-model=""></p>
+      <p>Created date:</p>
+      <p><input type="text" ng-model=""></p>
+      <p>Due date:</p>
+      <p><input type="text" ng-model=""></p>
+      <button ng-click="addUser(user_name)">Save</button>
+
+      <h3>Get all tasks</h3>
+      <hr>
+      <p>No tasks requested yet</p>
+      <button ng-click="">Delete</button>
+      <button ng-click="">Edit</button>
+      <button ng-click="">Open</button>
+      <button ng-click="getUser()">Get users</button>
     </div>
-    
-    <script src="script.js"></script>
   </body>
 </html>

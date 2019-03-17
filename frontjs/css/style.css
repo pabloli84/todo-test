@@ -1,0 +1,12 @@
+.menu button {
+    height: 50px;
+    width: 200px;
+    background-color: darkolivegreen;
+    color: #999999;
+    align-content: center;
+}
+
+body{
+    background-color: white;
+}
+

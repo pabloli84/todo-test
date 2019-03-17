@@ -1,0 +1,23 @@
+<html ng-app="testApp">
+<head>
+    <title>Test application</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+    <script src="script.js" defer></script>
+</head>
+<body ng-controller="testController2">
+<h2>Users</h2>
+<br>
+<h3>Create user</h3>
+<p>Input username:</p>
+<p><input type="text" ng-model="user_name"></p>
+<button ng-click="addUser(user_name)">Add user</button>
+
+<h3>Create user</h3>
+<button ng-click="getUser()">Get users</button>
+<div id="users">
+
+</div>
+
+</body>
+</html>
