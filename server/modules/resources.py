@@ -42,7 +42,18 @@ class Task(Resource):
         if dbase.delete_task(task_id):
             return "", 204
         else:
-            return {"message": "Data integrity error"}, 400
+            return {"message": "Data integrity error!"}, 400
+
+    @marshal_with(task_fields)
+    def put(self, task_id):
+        args = parser.parse_args(strict=True)
+
+        if dbase.update_task(task_id=task_id, task_name=args.task_name,
+                             task_descripiton=args.description,
+                             task_assignee=args.assignee):
+            return "Successfully updated task {:s}".format(args.task_name), 204
+        else:
+            return "Data integrity error!", 400
 
 
 class Users(Resource):
@@ -62,8 +73,6 @@ class Users(Resource):
 
 class User(Resource):
     def delete(self, user_name):
-        args = parser.parse_args()
-        task_id = args['user_name']
 
         if dbase.delete_user(user_name):
             return "", 204
