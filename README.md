@@ -25,6 +25,9 @@ python3 app.py
     {"user_name": "test user"}
     ```
     * GET - get all users
+
+* /users/<string:user_name>
+    * DELETE - delete user with _user_name_
     
 * /tasks
     * POST - create new task
@@ -39,6 +42,9 @@ python3 app.py
     }
     ```
     * GET - get all tasks
+    
+* /tasks/<int:task_id>
+    * DELETE - delete task with _task_id_
     
 * /db
     * DELETE - will delete all tables and recreate from scratch
