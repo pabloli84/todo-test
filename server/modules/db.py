@@ -32,7 +32,7 @@ class ManageTodoDB:
                 user_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_name VARCHAR(50) NOT NULL UNIQUE
             );
-              '''
+        '''
         c = self.connect_db().cursor()
         try:
             c.executescript(sql)
@@ -53,6 +53,20 @@ class ManageTodoDB:
             return True
         except sqlite3.IntegrityError as e:
             logger.error("Error adding user %s. Message: %s", username, e)
+            return False
+
+    def delete_user(self, username):
+        sql = '''
+            DELETE FROM users WHERE user_name = "{:s}";
+        '''.format(username)
+
+        c = self.connect_db().cursor()
+        try:
+            c.executescript(sql)
+            logger.info("Successfully deleted user %s", username)
+            return True
+        except sqlite3.IntegrityError as e:
+            logger.error("Error deleting user %s. Message: %s", username, e)
             return False
 
     # Add new task
@@ -76,6 +90,52 @@ class ManageTodoDB:
         except sqlite3.IntegrityError as e:
             logger.error("DB integrity error: %s", e)
             return e
+
+    def get_task_by_id(self, task_id):
+        sql = '''
+            SELECT * FROM tasks WHERE task_id = {:d};
+        '''.format(task_id)
+
+        c = self.connect_db().cursor()
+        c.execute(sql)
+        task = c.fetchone()
+        logger.info("Successfully got task info by id %s", task_id)
+
+        return task
+
+    def update_task(self, **kwargs):
+        sql = '''
+            UPDATE tasks SET
+                task_name = "{:s}",
+                task_description = "{:s}",
+                task_assignee = "{:s}"
+            WHERE
+                task_id = {:d}
+        '''.format(kwargs['task_name'], kwargs['task_descripiton'], kwargs['task_assignee'], kwargs['task_id'])
+
+        c = self.connect_db().cursor()
+
+        try:
+            c.executescript(sql)
+            logger.info("Successfully updated task {:s}", kwargs['task_name'])
+            return True
+        except sqlite3.IntegrityError as e:
+            logger.error("Integrity error updating task id {:d}, name {:s}", kwargs['task_id'], kwargs['task_name'])
+            return False
+
+    def delete_task(self, task_id):
+        sql = '''
+            DELETE FROM tasks WHERE task_id = {:d};
+        '''.format(task_id)
+
+        c = self.connect_db().cursor()
+        try:
+            c.executescript(sql)
+            logger.info("Successfully deleted task %s", task_id)
+            return True
+        except sqlite3.IntegrityError as e:
+            logger.error("Error deleting task %s. Message: %s", task_id, e)
+            return False
 
     # Helper  method to user id by name
     def __get_user_id(self, user_name):
@@ -107,7 +167,7 @@ class ManageTodoDB:
     # Get all tasks in DB
     def get_all_tasks(self):
         sql = '''
-            SELECT task_name, task_description, task_start_date, task_end_date, user_name FROM tasks, users
+            SELECT task_id, task_name, task_description, task_start_date, task_end_date, user_name FROM tasks, users
             WHERE task_assignee = user_id;
         '''
 

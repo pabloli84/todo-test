@@ -27,13 +27,36 @@ class Tasks(Resource):
 
     @marshal_with(task_fields)
     def post(self):
-        args = parser.parse_args()
+        args = parser.parse_args(strict=True)
         response = dbase.add_task(args.task_name, args.description, args.assignee, args.start_date, args.end_date)
 
         return args, response
 
     def get(self):
         return dbase.get_all_tasks()
+
+
+class Task(Resource):
+
+    def get(self, task_id):
+        return dbase.get_task_by_id(task_id)
+
+    def delete(self, task_id):
+        if dbase.delete_task(task_id):
+            return "", 204
+        else:
+            return {"message": "Data integrity error!"}, 400
+
+    @marshal_with(task_fields)
+    def put(self, task_id):
+        args = parser.parse_args(strict=True)
+
+        if dbase.update_task(task_id=task_id, task_name=args.task_name,
+                             task_descripiton=args.description,
+                             task_assignee=args.assignee):
+            return "Successfully updated task {:s}".format(args.task_name), 204
+        else:
+            return "Data integrity error!", 400
 
 
 class Users(Resource):
@@ -49,6 +72,15 @@ class Users(Resource):
     def get(self):
         logger.info("Getting all users from DB")
         return dbase.get_all_users()
+
+
+class User(Resource):
+    def delete(self, user_name):
+
+        if dbase.delete_user(user_name):
+            return "", 204
+        else:
+            return "Data integrity error", 400
 
 
 class TasksDB(Resource):
