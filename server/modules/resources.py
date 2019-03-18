@@ -37,8 +37,11 @@ class Tasks(Resource):
 
 
 class Task(Resource):
-    def delete(self, task_id):
 
+    def get(self, task_id):
+        return dbase.get_task_by_id(task_id)
+
+    def delete(self, task_id):
         if dbase.delete_task(task_id):
             return "", 204
         else:

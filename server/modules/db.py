@@ -91,6 +91,18 @@ class ManageTodoDB:
             logger.error("DB integrity error: %s", e)
             return e
 
+    def get_task_by_id(self, task_id):
+        sql = '''
+            SELECT * FROM tasks WHERE task_id = {:d};
+        '''.format(task_id)
+
+        c = self.connect_db().cursor()
+        c.execute(sql)
+        task = c.fetchone()
+        logger.info("Successfully got task info by id %s", task_id)
+        
+        return task
+
     def update_task(self, **kwargs):
         sql = '''
             UPDATE tasks SET
