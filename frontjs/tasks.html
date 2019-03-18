@@ -1,0 +1,39 @@
+ <html ng-app="testApp">
+  <head>
+    <title>Test application</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+
+  </head>
+  <body ng-controller="testController">
+   
+ <div>
+      <h2>TASKS</h2>
+      <hr>
+      <h3>Create task</h3>
+      <form>
+      <p>Task name:</p>
+      <input type="text" ng-model="user_name">
+      <p>Description:</p>
+      <input class="description" type="text" ng-model="">
+      <p>Assignee:</p>
+      <input type="text" ng-model="">
+      <p>Created date:</p>
+      <input type="date" ng-model="">
+      <p>Due date:</p>
+      <input type="date" ng-model="">
+</form>
+ <button class="form_button" ng-click="addUser(user_name)">OK</button>
+      <h3>Get all tasks</h3>
+      <hr>
+      <p>No tasks requested yet</p>
+      <!--button ng-click="">Delete</button>
+      <button ng-click="">Edit</button>
+      <button ng-click="">Open</button-->
+      <!--button ng-click="getUser()">Get users</button-->
+    </div>
+
+
+   
+  </body>
+</html>
