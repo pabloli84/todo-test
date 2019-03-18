@@ -27,13 +27,22 @@ class Tasks(Resource):
 
     @marshal_with(task_fields)
     def post(self):
-        args = parser.parse_args()
+        args = parser.parse_args(strict=True)
         response = dbase.add_task(args.task_name, args.description, args.assignee, args.start_date, args.end_date)
 
         return args, response
 
     def get(self):
         return dbase.get_all_tasks()
+
+    def delete(self, task_id):
+        args = parser.parse_args()
+        task_id = args['task_id']
+
+        if dbase.delete_task(task_id):
+            return "", 204
+        else:
+            return {"message": "Data integrity error"}, 400
 
 
 class Users(Resource):
