@@ -26,6 +26,8 @@ api = Api(app)
 api.add_resource(resources.Tasks, '/tasks')
 api.add_resource(resources.Users, '/users')
 api.add_resource(resources.TasksDB, '/db')
+api.add_resource(resources.Task, '/tasks/<int:task_id>')
+api.add_resource(resources.User, '/users/<string:user_name>')
 
 
 port = os.getenv("PORT", 5001)

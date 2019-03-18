@@ -57,7 +57,7 @@ class ManageTodoDB:
 
     def delete_user(self, username):
         sql = '''
-            DELETE FROM users WHERE user_name = {:s};
+            DELETE FROM users WHERE user_name = "{:s}";
         '''.format(username)
 
         c = self.connect_db().cursor()
@@ -93,7 +93,7 @@ class ManageTodoDB:
 
     def delete_task(self, task_id):
         sql = '''
-            DELETE FROM tasks WHERE task_id = {:s};
+            DELETE FROM tasks WHERE task_id = {:d};
         '''.format(task_id)
 
         c = self.connect_db().cursor()

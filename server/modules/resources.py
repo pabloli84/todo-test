@@ -35,9 +35,9 @@ class Tasks(Resource):
     def get(self):
         return dbase.get_all_tasks()
 
+
+class Task(Resource):
     def delete(self, task_id):
-        args = parser.parse_args()
-        task_id = args['task_id']
 
         if dbase.delete_task(task_id):
             return "", 204
@@ -58,6 +58,17 @@ class Users(Resource):
     def get(self):
         logger.info("Getting all users from DB")
         return dbase.get_all_users()
+
+
+class User(Resource):
+    def delete(self, user_name):
+        args = parser.parse_args()
+        task_id = args['user_name']
+
+        if dbase.delete_user(user_name):
+            return "", 204
+        else:
+            return "Data integrity error", 400
 
 
 class TasksDB(Resource):
