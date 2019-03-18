@@ -53,6 +53,7 @@ python3 app.py
       "assignee": "3000"
     }
     ```
+    * GET - get task by _task_id_
     
 * /db
     * DELETE - will delete all tables and recreate from scratch

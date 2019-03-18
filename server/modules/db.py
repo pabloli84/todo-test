@@ -100,7 +100,7 @@ class ManageTodoDB:
         c.execute(sql)
         task = c.fetchone()
         logger.info("Successfully got task info by id %s", task_id)
-        
+
         return task
 
     def update_task(self, **kwargs):
