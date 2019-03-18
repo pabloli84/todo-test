@@ -130,6 +130,5 @@ class ManageTodoDB:
         c.execute(sql)
 
         users = c.fetchall()
-        print(users)
 
         return users
