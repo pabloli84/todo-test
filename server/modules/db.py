@@ -32,7 +32,7 @@ class ManageTodoDB:
                 user_id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_name VARCHAR(50) NOT NULL UNIQUE
             );
-              '''
+        '''
         c = self.connect_db().cursor()
         try:
             c.executescript(sql)

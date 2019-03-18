@@ -45,6 +45,14 @@ python3 app.py
     
 * /tasks/<int:task_id>
     * DELETE - delete task with _task_id_
+    * PUT - update task, example Json:
+    ```json
+    {
+      "task_name": "Task 9999999",
+      "description": "This is Task 59999999",
+      "assignee": "3000"
+    }
+    ```
     
 * /db
     * DELETE - will delete all tables and recreate from scratch
