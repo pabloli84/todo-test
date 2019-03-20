@@ -1,5 +1,6 @@
 import sqlite3
 import logging
+from datetime import datetime, timedelta, date
 
 logger = logging.getLogger()
 
@@ -76,6 +77,36 @@ class ManageTodoDB:
         if not user_id:
             return 404
 
+        # =====Check dates validity==================================================
+        now = datetime.now()
+        s_date = datetime.strptime(start_date, "%Y-%m-%d")
+        e_date = datetime.strptime(end_date, "%Y-%m-%d")
+
+        if s_date.date() < now.date():
+            message = "Start must be greater than or equal to now."
+            logger.error(message)
+            return {"message": message}, 400
+        elif s_date > e_date:
+            message = "Start date must be greater than equal to end date."
+            logger.error(message)
+            return {"message": message}, 400
+
+        # =====Adjust dates according to technical task==============================
+        if s_date.month == 2:
+            e_date += timedelta(days=7)
+            logger.warning("Start date is in Feb, so adding 7 days to end date: %s", e_date.strftime("%Y-%m-%d"))
+        elif s_date.month == 12:
+            e_date = date(s_date.year, s_date.month, 31)
+            logger.warning("Start date is Dec, so setting end date to Dec 31st: %s", e_date.strftime("%Y-%m-%d"))
+        elif s_date.month == 5:
+            e_date += timedelta(days=15)
+            logger.warning("Start date is in May, so adding 15 days to end date: %s", e_date.strftime("%Y-%m-%d"))
+
+        # ===========================================================================
+
+        start_date = s_date.strftime("%Y-%m-%d")
+        end_date = e_date.strftime("%Y-%m-%d")
+
         sql = '''
             INSERT INTO tasks (task_name, task_description, task_assignee, task_start_date, task_end_date)
             VALUES("{:s}", "{:s}", {:d}, "{:s}", "{:s}")
@@ -84,12 +115,13 @@ class ManageTodoDB:
         c = self.connect_db().cursor()
         try:
             c.executescript(sql)
-            logger.info("Successfully added task: %s", name)
-            return 201
+            message = "Successfully added task: %s"
+            logger.info(message, name)
+            return {"message": message.format(name)}, 201
 
         except sqlite3.IntegrityError as e:
             logger.error("DB integrity error: %s", e)
-            return e
+            return e, 400
 
     def get_task_by_id(self, task_id):
         sql = '''
