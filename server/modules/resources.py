@@ -25,12 +25,13 @@ task_fields = {
 
 class Tasks(Resource):
 
+    # Create task
     @marshal_with(task_fields)
     def post(self):
         args = parser.parse_args(strict=True)
-        response = dbase.add_task(args.task_name, args.description, args.assignee, args.start_date, args.end_date)
+        response, code = dbase.add_task(args.task_name, args.description, args.assignee, args.start_date, args.end_date)
 
-        return args, response
+        return args, code
 
     def get(self):
         return dbase.get_all_tasks()

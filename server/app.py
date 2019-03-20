@@ -31,7 +31,6 @@ api.add_resource(resources.User, '/users/<string:user_name>')
 
 
 port = os.getenv("PORT", 5001)
-print(port)
 
 if __name__ == '__main__':
     app.run(port=port, host="0.0.0.0", debug=True)
