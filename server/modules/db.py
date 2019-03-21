@@ -141,6 +141,11 @@ class ManageTodoDB:
         return task
 
     def update_task(self, **kwargs):
+
+        user_id = self.__get_user_id(kwargs['task_assignee'])
+        if not user_id:
+            return {"message": "No such user"}, 404
+
         sql_status = ''
         status = kwargs['status']
         if kwargs['status'] != 'none':
@@ -159,10 +164,10 @@ class ManageTodoDB:
             UPDATE tasks SET
                 task_name = "{:s}",
                 task_description = "{:s}",
-                task_assignee = "{:s}"
+                task_assignee = "{:d}"
             WHERE
                 task_id = {:d};
-        '''.format(kwargs['task_name'], kwargs['task_descripiton'], kwargs['task_assignee'], kwargs['task_id'])
+        '''.format(kwargs['task_name'], kwargs['task_descripiton'], user_id, kwargs['task_id'])
 
         c = self.connect_db().cursor()
 
