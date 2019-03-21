@@ -12,6 +12,7 @@ parser.add_argument('description', dest='description')
 parser.add_argument('assignee', dest='assignee')
 parser.add_argument('start_date', dest='start_date')
 parser.add_argument('end_date', dest='end_date')
+parser.add_argument('status', dest='status')
 parser.add_argument('user_name')
 
 task_fields = {
@@ -19,7 +20,8 @@ task_fields = {
     "description": fields.String,
     "assignee": fields.String,
     "start_date": fields.String,
-    "end_date": fields.String
+    "end_date": fields.String,
+    "status": fields.String
 }
 
 
@@ -48,13 +50,15 @@ class Task(Resource):
         else:
             return {"message": "Data integrity error!"}, 400
 
+    # Update task
     @marshal_with(task_fields)
     def put(self, task_id):
         args = parser.parse_args(strict=True)
 
         if dbase.update_task(task_id=task_id, task_name=args.task_name,
                              task_descripiton=args.description,
-                             task_assignee=args.assignee):
+                             task_assignee=args.assignee,
+                             status=args.status if args.status is not None else "none"):
             return "Successfully updated task {:s}".format(args.task_name), 204
         else:
             return "Data integrity error!", 400

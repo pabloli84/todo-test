@@ -17,6 +17,8 @@ logger.setLevel(logging.INFO)
 todo_db = db.ManageTodoDB()
 todo_db.create_db_struct()
 
+debug_mode = os.getenv('TODO_DEBUG', False)
+
 app = Flask(__name__)
 cors = CORS(app)
 
@@ -33,4 +35,4 @@ api.add_resource(resources.User, '/users/<string:user_name>')
 port = os.getenv("PORT", 5001)
 
 if __name__ == '__main__':
-    app.run(port=port, host="0.0.0.0", debug=True)
+    app.run(port=port, host="0.0.0.0", debug=debug_mode)

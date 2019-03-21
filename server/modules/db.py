@@ -5,6 +5,7 @@ from datetime import datetime, timedelta, date
 logger = logging.getLogger()
 
 db_file = 'db.sqlite'
+task_statuses = ['Assigned', 'Expired', 'In progress', 'Waiting', 'Cancelled', 'Closed']
 
 
 class ManageTodoDB:
@@ -12,6 +13,7 @@ class ManageTodoDB:
     def connect_db(self):
         try:
             db = sqlite3.connect(db_file)
+            db.execute("PRAGMA foreign_keys = 1")
             logger.info("Connected to DB: %s", db_file)
             return db
         except sqlite3.Error as e:
@@ -22,6 +24,7 @@ class ManageTodoDB:
         sql = '''
             CREATE TABLE IF NOT EXISTS tasks (
                 task_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                task_status VARCHAR(30),
                 task_name VARCHAR(250) NOT NULL,
                 task_description VARCHAR(1000) NOT NULL,
                 task_assignee INTEGER NOT NULL,
@@ -75,7 +78,7 @@ class ManageTodoDB:
 
         user_id = self.__get_user_id(assignee)
         if not user_id:
-            return 404
+            return {"message": "No such user"}, 404
 
         # =====Check dates validity==================================================
         now = datetime.now()
@@ -107,10 +110,12 @@ class ManageTodoDB:
         start_date = s_date.strftime("%Y-%m-%d")
         end_date = e_date.strftime("%Y-%m-%d")
 
+        state = "Assigned"
+
         sql = '''
-            INSERT INTO tasks (task_name, task_description, task_assignee, task_start_date, task_end_date)
-            VALUES("{:s}", "{:s}", {:d}, "{:s}", "{:s}")
-        '''.format(name, description, user_id, start_date, end_date)
+            INSERT INTO tasks (task_status, task_name, task_description, task_assignee, task_start_date, task_end_date)
+            VALUES("{:s}", "{:s}", "{:s}", {:d}, "{:s}", "{:s}")
+        '''.format(state, name, description, user_id, start_date, end_date)
 
         c = self.connect_db().cursor()
         try:
@@ -136,23 +141,38 @@ class ManageTodoDB:
         return task
 
     def update_task(self, **kwargs):
+        sql_status = ''
+        status = kwargs['status']
+        if kwargs['status'] != 'none':
+            if status in task_statuses:
+                sql_status = '''
+                    UPDATE tasks SET
+                        task_status = "{:s}"
+                    WHERE
+                        task_id = {:d};
+                '''.format(status, kwargs['task_id'])
+            else:
+                logger.error("There is no such status as '{:s}'".format(status))
+                return False
+
         sql = '''
             UPDATE tasks SET
                 task_name = "{:s}",
                 task_description = "{:s}",
                 task_assignee = "{:s}"
             WHERE
-                task_id = {:d}
+                task_id = {:d};
         '''.format(kwargs['task_name'], kwargs['task_descripiton'], kwargs['task_assignee'], kwargs['task_id'])
 
         c = self.connect_db().cursor()
 
         try:
-            c.executescript(sql)
-            logger.info("Successfully updated task {:s}", kwargs['task_name'])
+            c.executescript(sql + sql_status)
+            logger.info("Successfully updated task %s", kwargs['task_name'])
             return True
         except sqlite3.IntegrityError as e:
-            logger.error("Integrity error updating task id {:d}, name {:s}", kwargs['task_id'], kwargs['task_name'])
+            logger.error("Integrity error updating task id %s, name %s. Message: %s", kwargs['task_id'],
+                         kwargs['task_name'], e)
             return False
 
     def delete_task(self, task_id):
@@ -199,17 +219,21 @@ class ManageTodoDB:
     # Get all tasks in DB
     def get_all_tasks(self):
         sql = '''
-            SELECT task_id, task_name, task_description, task_start_date, task_end_date, user_name FROM tasks, users
+            SELECT task_id, task_status, task_name, task_description, task_start_date, task_end_date,
+            user_name FROM tasks, users
             WHERE task_assignee = user_id;
         '''
 
         conn = self.connect_db()
 
         c = conn.cursor()
-        c.execute(sql)
-
-        tasks = c.fetchall()
-        return tasks
+        try:
+            c.execute(sql)
+            tasks = c.fetchall()
+            logger.info("Got all tasks.")
+            return tasks
+        except sqlite3.DataError as e:
+            logger.error("Error getting all tasks: {:s}", e)
 
     def get_all_users(self):
         sql = '''
