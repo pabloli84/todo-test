@@ -133,7 +133,11 @@ class ManageTodoDB:
             SELECT * FROM tasks WHERE task_id = {:d};
         '''.format(task_id)
 
-        c = self.connect_db().cursor()
+        conn = self.connect_db()
+        conn.row_factory = self.__dict_factory
+
+        c = conn.cursor()
+
         c.execute(sql)
         task = c.fetchone()
         logger.info("Successfully got task info by id %s", task_id)
