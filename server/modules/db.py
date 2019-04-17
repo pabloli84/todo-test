@@ -78,7 +78,7 @@ class ManageTodoDB:
 
         user_id = self.__get_user_id(assignee)
         if not user_id:
-            return {"message": "No such user"}, 404
+            return "User {:s} does not exist".format(assignee), 404
 
         # =====Check dates validity==================================================
         now = datetime.now()
@@ -126,7 +126,7 @@ class ManageTodoDB:
 
         except sqlite3.IntegrityError as e:
             logger.error("DB integrity error: %s", e)
-            return e, 400
+            return e, 409
 
     def get_task_by_id(self, task_id):
         sql = '''

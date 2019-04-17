@@ -1,4 +1,4 @@
-from flask_restful import Resource, reqparse, fields, marshal_with
+from flask_restful import Resource, reqparse, fields, marshal_with, abort
 from modules import db
 import logging
 
@@ -32,7 +32,8 @@ class Tasks(Resource):
     def post(self):
         args = parser.parse_args(strict=True)
         response, code = dbase.add_task(args.task_name, args.description, args.assignee, args.start_date, args.end_date)
-
+        if code == 404:
+            abort(404, description=response)
         return args, code
 
     def get(self):
