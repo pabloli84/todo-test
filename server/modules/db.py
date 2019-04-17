@@ -5,7 +5,6 @@ from datetime import datetime, timedelta, date
 logger = logging.getLogger()
 
 db_file = 'db.sqlite'
-task_statuses = ['Assigned', 'Expired', 'In progress', 'Waiting', 'Cancelled', 'Closed']
 
 
 class ManageTodoDB:

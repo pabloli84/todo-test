@@ -6,13 +6,24 @@ logger = logging.getLogger()
 
 dbase = db.ManageTodoDB()
 
+task_statuses = ['Assigned', 'Expired', 'In progress', 'Waiting', 'Cancelled', 'Closed']
+
+
+def status(status_str):
+    if status_str in task_statuses:
+        return status_str
+    else:
+        raise ValueError("{:s} is not a valid status. Valid statuses are {}".format(status_str, task_statuses))
+
+
 parser = reqparse.RequestParser()
 parser.add_argument('task_name', dest='task_name')
 parser.add_argument('description', dest='description')
 parser.add_argument('assignee', dest='assignee')
 parser.add_argument('start_date', dest='start_date')
 parser.add_argument('end_date', dest='end_date')
-parser.add_argument('status', dest='status')
+parser.add_argument('status', dest='status', type=status,
+                    help='Tasks status, available values: {}'.format(task_statuses))
 parser.add_argument('user_name')
 
 task_fields = {
