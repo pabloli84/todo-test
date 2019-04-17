@@ -78,7 +78,9 @@ class ManageTodoDB:
 
         user_id = self.__get_user_id(assignee)
         if not user_id:
-            return "User {:s} does not exist".format(assignee), 404
+            message = "User {:s} does not exist".format(assignee)
+            logger.error(message)
+            return message, 404
 
         # =====Check dates validity==================================================
         now = datetime.now()
@@ -88,11 +90,11 @@ class ManageTodoDB:
         if s_date.date() < now.date():
             message = "Start must be greater than or equal to now."
             logger.error(message)
-            return {"message": message}, 400
+            return message, 400
         elif s_date > e_date:
-            message = "Start date must be greater than equal to end date."
+            message = "Start date must be greater than or equal to end date."
             logger.error(message)
-            return {"message": message}, 400
+            return message, 400
 
         # =====Adjust dates according to technical task==============================
         if s_date.month == 2:
@@ -122,7 +124,7 @@ class ManageTodoDB:
             c.executescript(sql)
             message = "Successfully added task: %s"
             logger.info(message, name)
-            return {"message": message.format(name)}, 201
+            return message, 201
 
         except sqlite3.IntegrityError as e:
             logger.error("DB integrity error: %s", e)
