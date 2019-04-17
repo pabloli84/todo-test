@@ -112,6 +112,7 @@ class ManageTodoDB:
         '''
 
         conn = self.connect_db()
+        conn.row_factory = self.__dict_factory
 
         c = conn.cursor()
         c.execute(sql)
@@ -125,6 +126,8 @@ class ManageTodoDB:
         '''
 
         conn = self.connect_db()
+        conn.row_factory = self.__dict_factory
+        # conn.row_factory = sqlite3.Row
 
         c = conn.cursor()
         c.execute(sql)
@@ -133,3 +136,10 @@ class ManageTodoDB:
         print(users)
 
         return users
+
+    @staticmethod
+    def __dict_factory(cursor, row):
+        d = {}
+        for idx, col in enumerate(cursor.description):
+            d[col[0]] = row[idx]
+        return d
