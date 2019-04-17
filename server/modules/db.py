@@ -82,6 +82,8 @@ class ManageTodoDB:
             logger.error(message)
             return message, 404
 
+        # if state not in task_statuses:
+        #     return
         # =====Check dates validity==================================================
         now = datetime.now()
         s_date = datetime.strptime(start_date, "%Y-%m-%d")
@@ -127,8 +129,9 @@ class ManageTodoDB:
             return message, 201
 
         except sqlite3.IntegrityError as e:
-            logger.error("DB integrity error: %s", e)
-            return e, 409
+            message = "DB integrity error: {:s}".format(e)
+            logger.error(message)
+            return message, 400
 
     def get_task_by_id(self, task_id):
         sql = '''
@@ -195,10 +198,11 @@ class ManageTodoDB:
         try:
             c.executescript(sql)
             logger.info("Successfully deleted task %s", task_id)
-            return True
+            return "", 204
         except sqlite3.IntegrityError as e:
-            logger.error("Error deleting task %s. Message: %s", task_id, e)
-            return False
+            message = "Error deleting task {:s}. Message: {:s}".format(task_id, e)
+            logger.error(message)
+            return message, 400
 
     # Helper  method to user id by name
     def __get_user_id(self, user_name):

@@ -46,10 +46,11 @@ class Task(Resource):
         return dbase.get_task_by_id(task_id)
 
     def delete(self, task_id):
-        if dbase.delete_task(task_id):
-            return "", 204
-        else:
-            return {"message": "Data integrity error!"}, 400
+        response, code = dbase.delete_task(task_id)
+        if code != 204:
+            abort(code, description=response)
+
+        return "", 204
 
     # Update task
     @marshal_with(task_fields)
@@ -62,7 +63,7 @@ class Task(Resource):
                              status=args.status if args.status is not None else "none"):
             return "Successfully updated task {:s}".format(args.task_name), 204
         else:
-            return "Data integrity error!", 400
+            abort(400, description="Data integrity error!")
 
 
 class Users(Resource):
