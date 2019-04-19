@@ -157,16 +157,12 @@ class ManageTodoDB:
         sql_status = ''
         status = kwargs['status']
         if kwargs['status'] != 'none':
-            if status in task_statuses:
-                sql_status = '''
-                    UPDATE tasks SET
-                        task_status = "{:s}"
-                    WHERE
-                        task_id = {:d};
-                '''.format(status, kwargs['task_id'])
-            else:
-                logger.error("There is no such status as '{:s}'".format(status))
-                return False
+            sql_status = '''
+                UPDATE tasks SET
+                    task_status = "{:s}"
+                WHERE
+                    task_id = {:d};
+            '''.format(status, kwargs['task_id'])
 
         sql = '''
             UPDATE tasks SET
