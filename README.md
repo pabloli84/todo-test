@@ -37,8 +37,8 @@ python3 app.py
         "task_name": "Task 9",
         "description": "This is Task 5",
         "assignee": "test user",
-        "start_date": "2019-03-1333",
-        "end_date": "2019-03-11 "
+        "start_date": "2019-03-13",
+        "end_date": "2019-03-11"
     }
     ```
     * GET - get all tasks
