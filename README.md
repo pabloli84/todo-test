@@ -1,5 +1,7 @@
 # todo-test
 
+[toc]
+
 # Setup and run
 
 * Install python3 and pip3
