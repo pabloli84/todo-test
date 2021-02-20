@@ -16,6 +16,30 @@ cd ./server
 python3 app.py
 ```
 
+# Setup with virtual env (recommended)
+
+* Install virtualenv
+
+```
+python3 -m pip install virtualenv
+```
+
+* Activate virtual env and install dependencies
+
+```
+cd todo-test
+virtualenv -p python3 ./.venv
+source ./.venv/bin/activate
+pip3 install -r requirements.txt
+```
+
+* Run server
+
+```
+cd ./server
+python3 app.py
+```
+
 # API
 
 * /users
@@ -28,7 +52,7 @@ python3 app.py
 
 * /users/<string:user_name>
     * DELETE - delete user with _user_name_
-    
+
 * /tasks
     * POST - create new task
     Sample json
@@ -42,7 +66,7 @@ python3 app.py
     }
     ```
     * GET - get all tasks
-    
+
 * /tasks/<int:task_id>
     * DELETE - delete task with _task_id_
     * PUT - update task, example Json:
@@ -54,6 +78,6 @@ python3 app.py
     }
     ```
     * GET - get task by _task_id_
-    
+
 * /db
     * DELETE - will delete all tables and recreate from scratch
