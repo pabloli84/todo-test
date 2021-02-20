@@ -1,6 +1,10 @@
-# todo-test
+Table of Contents
+=================
 
-[toc]
+   * [Setup and run](#setup-and-run)
+   * [Setup with virtual env (recommended)](#setup-with-virtual-env-recommended)
+   * [With Docker](#with-docker)
+   * [API](#api)
 
 # Setup and run
 
