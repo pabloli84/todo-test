@@ -52,7 +52,7 @@ Run following commands:
 
 ```
 docker build -t todo-test:v0.1 .       
-docker run -d --rm -it -p 5001:5001 todo-test:v0.1
+docker run -d --rm -p 5001:5001 todo-test:v0.1
 ```
 
 # API
