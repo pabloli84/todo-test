@@ -39,6 +39,13 @@ source ./.venv/bin/activate
 pip3 install -r requirements.txt
 ```
 
+* Activate virtual env on Windows
+
+```
+.\.venv\Scripts\activate.bat
+
+```
+
 * Run server
 
 ```
