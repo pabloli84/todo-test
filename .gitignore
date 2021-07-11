@@ -110,3 +110,6 @@ venv.bak/
 *.db
 *.db-journal
 *.sqlite
+
+api-tests/package-lock.json
+api-tests/node_modules
