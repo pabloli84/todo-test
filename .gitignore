@@ -113,3 +113,4 @@ venv.bak/
 
 api-tests/package-lock.json
 api-tests/node_modules
+api-tests/cypress/videos
